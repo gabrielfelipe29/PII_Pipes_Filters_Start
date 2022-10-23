@@ -10,7 +10,9 @@ namespace CompAndDel.Pipes
     {
         protected IFilter filtro;
         protected IPipe nextPipe;
-        
+
+        private ImageHandler imageHandler = new ImageHandler();
+        private TwitterMessage twitterMessage = new TwitterMessage();
         /// <summary>
         /// La cañería recibe una imagen, le aplica un filtro y la envía a la siguiente cañería
         /// </summary>
@@ -36,12 +38,15 @@ namespace CompAndDel.Pipes
             get { return this.filtro; }
         }
         /// <summary>
-        /// Recibe una imagen, le aplica un filtro y la envía al siguiente Pipe
+        /// Recibe una imagen, le aplica un filtro, guarda la imagen, la sube a twitter y la envía al siguiente Pipe
         /// </summary>
         /// <param name="picture">Imagen a la cual se debe aplicar el filtro</param>
         public IPicture Send(IPicture picture)
         {
             picture = this.filtro.Filter(picture);
+            String path = imageHandler.GeneratePath();
+            imageHandler.SaveImage(picture, path);
+            twitterMessage.Send(path);
             return this.nextPipe.Send(picture);
         }
     }
