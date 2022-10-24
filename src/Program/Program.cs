@@ -9,22 +9,28 @@ namespace CompAndDel
         static void Main(string[] args)
         {
             PictureProvider provider = new PictureProvider();
-            IPicture picture = provider.GetPicture("luke.jpg");
+            IPicture picture = provider.GetPicture("beer.jpg");
 
             PipeNull pipenull = new PipeNull();
+            FilterCondicional filtrocondicional = new FilterCondicional();
+            FilterNegative filtronegativo = new FilterNegative();
+            FilterGreyscale filtrogreyscale = new FilterGreyscale();
+            TwitterFilter filtrotwitter = new TwitterFilter();
 
-            FilterNegative filter2 = new FilterNegative();
-            FilterGreyscale filter1 = new FilterGreyscale();
+            PipeSerial pipeserial4 = new PipeSerial(filtrotwitter, pipenull);
+            PipeSerial pipeserial3 = new PipeSerial(filtronegativo, pipenull);
+            PipeFork pipefork = new PipeFork(pipeserial4, pipeserial3);
 
-            PipeSerial piperserial2 = new PipeSerial(filter2, pipenull);
-            PipeSerial piperserial1 = new PipeSerial(filter1, piperserial2);
+            PipeSerial pipeserial2 = new PipeSerial(filtrocondicional, pipefork);
+            PipeSerial pipeserial1 = new PipeSerial(filtrogreyscale, pipeserial2);
 
 
-            IPicture image = piperserial1.Send(picture);
-            pipenull.Send(image);
+            IPicture image = pipeserial1.Send(picture);
 
-            //PictureProvider provider1 = new PictureProvider();
-            //provider.SavePicture(image, "nuevaimage.jpg");
+
+            //guarda la ultima imagen
+            PictureProvider provider1 = new PictureProvider();
+            provider.SavePicture(pipenull.Send(image), "imagenfinal.jpg");
 
 
         }

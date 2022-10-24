@@ -13,6 +13,10 @@ namespace CompAndDel.Pipes
 
         private ImageHandler imageHandler = new ImageHandler();
         private TwitterMessage twitterMessage = new TwitterMessage();
+
+        public string path { get; private set; }
+
+        public IPicture picture { get; private set; }
         /// <summary>
         /// La cañería recibe una imagen, le aplica un filtro y la envía a la siguiente cañería
         /// </summary>
@@ -41,12 +45,15 @@ namespace CompAndDel.Pipes
         /// Recibe una imagen, le aplica un filtro, guarda la imagen, la sube a twitter y la envía al siguiente Pipe
         /// </summary>
         /// <param name="picture">Imagen a la cual se debe aplicar el filtro</param>
-        public IPicture Send(IPicture picture)
+        public IPicture Send(IPicture pic)
         {
-            picture = this.filtro.Filter(picture);
-            String path = imageHandler.GeneratePath();
+            //aplica filtro, genera un path para guardar la imagen y la guarda
+            picture = this.filtro.Filter(pic);
+            path = imageHandler.GeneratePath();
+
             imageHandler.SaveImage(picture, path);
-            twitterMessage.Send(path);
+            picture.path = path;
+
             return this.nextPipe.Send(picture);
         }
     }

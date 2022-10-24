@@ -14,15 +14,20 @@ namespace CompAndDel
         /// </summary>
         /// <param name="path">El path del archivo desde el cual leer la imagen.</param>
         /// <returns>La imagen leida.</returns>
+
+        public string Path { get; private set; }
         public IPicture GetPicture(string path)
         {
+            this.Path = path;
             Picture picture = new Picture(1, 1);
+            picture.path = path;
+            picture.HasFace = false;
             using (var image = Image.Load<Rgba32>(path))
             {
                 picture.Resize(image.Width, image.Height);
                 for (int h = 0; h < image.Height; h++)
                 {
-                    for (int w = 0; w <image.Width; w++)
+                    for (int w = 0; w < image.Width; w++)
                     {
                         picture.SetColor(w, h, System.Drawing.Color.FromArgb(image[w, h].A, image[w, h].R, image[w, h].G, image[w, h].B));
                     }
@@ -40,7 +45,7 @@ namespace CompAndDel
         {
             int width = picture.Width;
             int height = picture.Height;
-            using(Image<Rgba32> image = new Image<Rgba32>(width, height)) // creates a new image with all the pixels set as transparent
+            using (Image<Rgba32> image = new Image<Rgba32>(width, height)) // creates a new image with all the pixels set as transparent
             {
                 for (int h = 0; h < picture.Height; h++)
                 {

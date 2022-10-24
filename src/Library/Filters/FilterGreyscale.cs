@@ -15,6 +15,8 @@ namespace CompAndDel.Filters
         public IPicture Filter(IPicture image)
         {
             IPicture result = image.Clone();
+            result.HasFace = image.HasFace;
+            result.path = image.path;
 
             for (int x = 0; x < result.Width; x++)
             {

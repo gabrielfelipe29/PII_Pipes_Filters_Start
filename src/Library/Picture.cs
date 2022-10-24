@@ -11,6 +11,11 @@ namespace CompAndDel
     /// </summary>
     public class Picture : IPicture
     {
+
+        public string path { get; set; }
+        // Es la ruta de la imagen, y es el experto 
+        public bool HasFace { get; set; }
+        // Indica si la imagen tiene cara o no, y es el experto
         private Color[,] colorsMatrix;
 
         /// <summary>
@@ -29,7 +34,7 @@ namespace CompAndDel
         /// </summary>
         public Int32 Width
         {
-            get {return this.colorsMatrix.GetLength(0); }
+            get { return this.colorsMatrix.GetLength(0); }
         }
 
         /// <summary>
@@ -101,14 +106,16 @@ namespace CompAndDel
         public IPicture Clone()
         {
             Picture pictureClone = new Picture(this.Width, this.Height);
+            pictureClone.HasFace = this.HasFace;
+            pictureClone.path = this.path;
             for (int x = 0; x < pictureClone.Width; x++)
             {
                 for (int y = 0; y < pictureClone.Height; y++)
                 {
-                    pictureClone.SetColor(x, y, this.colorsMatrix[x,y]);
+                    pictureClone.SetColor(x, y, this.colorsMatrix[x, y]);
                 }
             }
-            
+
             return pictureClone;
         }
     }

@@ -10,9 +10,13 @@ namespace CompAndDel
     /// </summary>
     public interface IPicture
     {
+        public bool HasFace { get; set; }
+        public String path { get; set; }
         /// <summary>
         /// Retorna el ancho de la imagen.
         /// </summary>
+        /// 
+        /// 
         Int32 Width { get; }
 
         /// <summary>
